@@ -1,4 +1,4 @@
-# ordering-simple-architecture
+# ordering-simple-architecture golang
 
 Adapting DDD concepts from CopyPasteEngineer and incorporating Golang code that I learnt from Codebangkok. 😺
 
