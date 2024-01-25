@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	customerMongoDBRepository "github.com/saharat-vithchataya/ordering/adapters/customer"
 	orderMongoDBRepository "github.com/saharat-vithchataya/ordering/adapters/order"
+	productMongoDBRepository "github.com/saharat-vithchataya/ordering/adapters/product"
 	"github.com/saharat-vithchataya/ordering/handlers"
 	"github.com/saharat-vithchataya/ordering/services"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,6 +26,10 @@ func main() {
 	customerSrv := services.NewCustomerService(customerRepo)
 	customerHandler := handlers.NewCustomerHandler(customerSrv)
 
+	productRepo := productMongoDBRepository.NewProductRepositoryMongoDB(db, "products")
+	productSrv := services.NewProductService(productRepo)
+	productHandler := handlers.NewProductHandler(productSrv)
+
 	app.Get("/customer/:customer_id", customerHandler.GetCustomer)
 	app.Post("/customer", customerHandler.CreateNewCustomer)
 
@@ -32,6 +37,9 @@ func main() {
 	app.Post("/order/:customer_id/create", orderHandler.CreateNewOrder)
 	app.Put("/order/:order_id", orderHandler.UpdateOrderItem)
 	app.Put("/order/:order_id/submit", orderHandler.SubmitOrder)
+
+	app.Get("/product/:product_id", productHandler.GetProduct)
+	app.Post("/product", productHandler.CreateNewProduct)
 
 	app.Listen(":8000")
 }

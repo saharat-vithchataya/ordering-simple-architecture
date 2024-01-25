@@ -9,11 +9,11 @@ var (
 )
 
 type Product struct {
-	ID          string
-	Name        string
-	Description string
-	Price       float64
-	Quantity    int
+	ID          string  `bson:"_id"`
+	Name        string  `bson:"name"`
+	Description string  `bson:"description"`
+	Price       float64 `bson:"price"`
+	Quantity    int     `bson:"quantity"`
 }
 
 func NewProduct(id, name string, price float64, quantity int) (Product, error) {

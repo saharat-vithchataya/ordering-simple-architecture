@@ -69,9 +69,6 @@ func (repo customerRepositoryMongoDB) Save(entity *domain.Customer) error {
 	}
 
 	if _, err = repo.db.Collection(repo.collection).UpdateOne(ctx, filter, update, options.Update().SetUpsert(true)); err != nil {
-		if err == mongo.ErrNoDocuments {
-			return domain.ErrCustomerNotFound
-		}
 		return err
 	}
 

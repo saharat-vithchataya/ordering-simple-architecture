@@ -69,9 +69,6 @@ func (repo orderRepositoryMongoDB) Save(entity *domain.Order) error {
 
 	_, err = repo.db.Collection(repo.collection).UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return domain.ErrOrderNotFound
-		}
 		return err
 	}
 
