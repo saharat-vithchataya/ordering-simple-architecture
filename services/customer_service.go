@@ -1,4 +1,4 @@
-package customer
+package services
 
 import (
 	"fmt"
@@ -15,16 +15,19 @@ func NewCustomerService(custRepo domain.CustomerRepository) domain.CustomerServi
 	return customerService{custRepo: custRepo}
 }
 
-func (srv customerService) CreateNewCustomer(name string) (string, error) {
+func (srv customerService) CreateNewCustomer(request domain.CustomerRequest) (string, error) {
 	id := srv.custRepo.NextIdentity()
 
-	newCustomer, err := domain.NewCustomer(id, name)
+	newCustomer, err := domain.NewCustomer(id, request.Name)
+	newCustomer.Phone = request.Phone
+	newCustomer.Address = request.Address
+
 	if err != nil {
 		logs.Error(err)
 		return "", err
 	}
 
-	if err = srv.custRepo.Save(newCustomer); err != nil {
+	if err = srv.custRepo.Save(&newCustomer); err != nil {
 		logs.Error(err)
 		return "", err
 	}
@@ -33,12 +36,17 @@ func (srv customerService) CreateNewCustomer(name string) (string, error) {
 	return id, nil
 }
 
-func (srv customerService) GetCustomer(id string) (domain.Customer, error) {
+func (srv customerService) GetCustomer(id string) (*domain.CustomerResponse, error) {
 	customer, err := srv.custRepo.FromID(id)
 	if err != nil {
 		logs.Error(err)
-		return domain.Customer{}, err
+		return nil, err
 	}
 
-	return customer, nil
+	return &domain.CustomerResponse{
+		ID:      customer.ID,
+		Name:    customer.Name,
+		Phone:   customer.Phone,
+		Address: customer.Address,
+	}, nil
 }

@@ -3,21 +3,22 @@ package customer
 import "errors"
 
 var (
-	ErrInvalidCustomer = errors.New("invalid customer information")
+	ErrInvalidCustomer  = errors.New("invalid customer information")
+	ErrCustomerNotFound = errors.New("customer not found")
 )
 
 type Customer struct {
-	ID      string
-	Name    string
-	Phone   string
-	Address string
+	ID      string `bson:"_id"`
+	Name    string `bson:"name"`
+	Phone   string `bson:"phone"`
+	Address string `bson:"address"`
 }
 
 func NewCustomer(id, name string) (Customer, error) {
 	if name == "" || id == "" {
 		return Customer{}, ErrInvalidCustomer
 	}
-	return Customer{ID: id}, nil
+	return Customer{ID: id, Name: name}, nil
 }
 
 func (entity *Customer) UpdateName(newName string) error {

@@ -1,4 +1,4 @@
-package product
+package services
 
 import (
 	domain "github.com/saharat-vithchataya/ordering/domain/product"
